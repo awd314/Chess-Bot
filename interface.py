@@ -1,5 +1,5 @@
 import pygame as pg
-from settings import SIDE, SQUARE_SIZE
+from settings import SIDE, SQUARE_SIZE, SIZE
 from pieces import piecesDictionary
 
 class Interface:
@@ -20,10 +20,13 @@ class Interface:
                 self.running = False
     
 
-    def DrawBoard(self, board):
+    def DrawBoard(self, board, flipped=-False):
         for i in range(len(board)):
             for j in range(len(board[i])):
                 rectPos = (j * SQUARE_SIZE, i * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE)
                 pg.draw.rect(self.screen, ["#AAAAAA", "#303030"][(i+j)%2], rectPos)
                 if board[i][j] != -1:
-                    self.screen.blit(piecesDictionary[board[i][j]], rectPos)
+                    if not flipped:
+                        self.screen.blit(piecesDictionary[board[i][j]], rectPos)
+                    else:
+                        self.screen.blit(piecesDictionary[board[SIZE-1-i][SIZE-1-j]], rectPos)

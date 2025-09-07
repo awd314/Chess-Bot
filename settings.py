@@ -1,3 +1,4 @@
 SIDE = 1000
 
 SQUARE_SIZE = SIDE // 8
+SIZE = 8

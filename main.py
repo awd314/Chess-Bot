@@ -1,6 +1,5 @@
 from interface import *
 from board import *
-from random import random
 
 
 class Main:
@@ -14,7 +13,7 @@ class Main:
             self.inter.CheckEvents()
 
             self.inter.screen.fill("#000000")
-            self.inter.DrawBoard(self.board.miniBoard)
+            self.inter.DrawBoard(self.board.miniBoard, self.board.flipped)
 
             pg.display.flip()
 
