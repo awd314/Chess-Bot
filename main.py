@@ -25,7 +25,7 @@ class Main:
 
             self.inter.screen.fill("#000000")
             self.inter.DrawBoard(self.board.miniBoard, self.board.flipped)
-            self.inter.TestFunction(self.board.GetWhiteBishopMoves((3, 2)))
+            #self.inter.TestFunction(self.board.GetWhiteKnightMoves((7, 1)))
 
             pg.display.flip()
 

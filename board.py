@@ -37,14 +37,6 @@ class Board:
             for j in range(SIZE):
                 if self.miniBoard[i][j] == 0:
                     pass
-    
-
-    def CheckMoveCheck(self, move, flag=-1):
-        """
-        Returns a boolean indicating whether or not a given move creates a check on the king or not.
-        The given flag indicates if it's about the white king or the black king.
-        """
-        pass
 
 
     def GetWhitePawnMoves(self, pos):
@@ -99,4 +91,22 @@ class Board:
                 else:
                     obstructedLane = True
          
+        return moves
+
+
+    def GetWhiteKnightMoves(self, pos):
+        """
+        Returns all possible moves for a white knight on the position given in parameter. The square indicated
+        by the position is supposed to be containing a white knight.
+        """
+        i, j = pos
+        moves = []
+
+        movesSequence = [(-2, -1), (-2, 1), (2, -1), (2, 1), (1, 2), (-1, 2), (1, -2), (-1, -2)] # Complete set of knight movements
+        for move in movesSequence:
+            y = i + move[0]
+            x = j + move[1]
+            if 0 <= y < SIZE and 0 <= x < SIZE and self.miniBoard[y][x] % 2 == 1: # Checks if the current position is not oob and if it's occupied by nothing or an enemy piece
+                moves.append((i, j, y, x)) # Adds to the possible moveset if so
+
         return moves
