@@ -1,0 +1,18 @@
+white
+1 : pawn
+3 : knight
+5 : bishop
+7 : rook
+9 : queen
+11 : king
+
+black
+2 : pawn
+4 : knight
+6 : bishop
+8 : rook
+10 : queen
+12 : king
+
+moves
+(i_start, j_start, i_end, j_end, en_passant_flag, white_castle_flag, black_castle_flag)
