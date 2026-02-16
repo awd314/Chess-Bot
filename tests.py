@@ -14,7 +14,9 @@ if __name__ == "__main__":
     ], 0, -1, False, False)
 
     def test_func(inter):
-        pass
+        for move in kng.get_black_knight_moves(inter.board.mini_board):
+            if move[1] == 4:
+                pg.draw.rect(inter.screen, "red", (move[3]*SQUARES_SIZE, move[2]*SQUARES_SIZE+HEIGHT_OFFEST, SQUARES_SIZE, SQUARES_SIZE))
 
     inter = Interface("test interface", brd, test_func)
 

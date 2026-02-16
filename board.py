@@ -1,4 +1,5 @@
-from moves.pawn_moves import *
+import moves.pawn_moves as pwn
+import moves.knight_moves as kng
 
 class Board:
     def __init__(self, mini_board, turn, en_passant, white_castle, black_castle):

@@ -1,6 +1,5 @@
 import pygame as pg
 from settings import *
-from moves.pawn_moves import get_white_pawn_moves
 
 class Interface:
     def __init__(self, title, board, test_func):
