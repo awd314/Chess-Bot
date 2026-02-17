@@ -15,6 +15,5 @@ black
 12 : king
 
 moves
-(i_start, j_start, i_end, j_end, special_event_flag, castle_flag)
-special_event_flag -> -1 (inactive) ; [0-7] (en_passant) ; [8-11] (promotions)
-castle_flag -> 0 (both not castled yet) ; 1 (white didn't castle, black castled) ; 2 (white castled, black didn't castle) ; 3 (both castled)
+(i_start, j_start, i_end, j_end, special_event_flag)
+special_event_flag -> -1 (inactive) ; [0-7] (en_passant) ; [8-11] (promotions) ; [12] (castle has been performed)
