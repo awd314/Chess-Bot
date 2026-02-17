@@ -15,7 +15,7 @@ def get_white_king_moves(pos, board):
             moves.append((pos[0], pos[1], 7, 6, 12))
         # long castle
         if board[7][3] == 0 and board[7][2] == 0 and board[7][1] == 0 and board[7][0] == 7:
-            moves.append((pos[0], pos[1], 7, 1, 12))
+            moves.append((pos[0], pos[1], 7, 2, 12))
 
     return moves
 
@@ -37,6 +37,6 @@ def get_black_king_moves(pos, board):
             moves.append((pos[0], pos[1], 0, 6, 12))
         # long castle
         if board[0][3] == 0 and board[0][2] == 0 and board[7][1] == 0 and board[7][0] == 8:
-            moves.append((pos[0], pos[1], 0, 1, 12))
+            moves.append((pos[0], pos[1], 0, 2, 12))
 
     return moves

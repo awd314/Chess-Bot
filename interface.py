@@ -25,19 +25,22 @@ class Interface:
             12 : pg.transform.scale(pg.image.load("./images/bking.png"), (PIECES_SIZE, PIECES_SIZE))
         }
         self.test_func = test_func
+        self.timer = 0
 
     
     def loop(self):
         while not self.closed:
             self.clock.tick(FPS)
+            self.timer += 1
+            self.timer %= 300
 
             for event in pg.event.get():
                 if event.type == pg.QUIT or event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                     self.closed = True
             
             self.screen.fill("#000000")
-            self.draw_board(self.board.mini_board)
             self.test_func(self)
+            self.draw_board(self.board.mini_board)
 
             pg.display.flip()
     

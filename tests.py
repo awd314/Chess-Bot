@@ -1,5 +1,6 @@
 from interface import *
 from board import *
+from random import randint
 
 if __name__ == "__main__":
     brd = Board([
@@ -15,8 +16,11 @@ if __name__ == "__main__":
     brd.get_pieces_from_board()
 
     def test_func(inter):
-        for move in kng.get_black_king_moves((0, 4), inter.board.mini_board):
-            pg.draw.rect(inter.screen, "red", (move[3]*SQUARES_SIZE, move[2]*SQUARES_SIZE+HEIGHT_OFFEST, SQUARES_SIZE, SQUARES_SIZE))
+        if inter.timer == 0:
+            moves = brd.get_white_moves(inter.board.mini_board)
+            move = moves[randint(0, len(moves)-1)]
+            print(move)
+            inter.board.play_move(move, inter.board.mini_board)
 
     inter = Interface("test interface", brd, test_func)
 

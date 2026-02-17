@@ -34,20 +34,18 @@ def get_black_pawn_moves(pawn_pos, board, en_passant):
     moves = []
 
     i, j = pawn_pos
-    if board[i][j] == 2: # Looks for black pawns in the board
-        count += 1
-        # Moving
-        if board[i+1][j] == 0: # Looks if the square in front of the pawn is free
-            moves.append((i, j, i+1, j, -1))
-            if i == 1 and board[3][j] == 0: # Starting rank, the pawn can moves twice
-                moves.append((i, j, i+2, j, i))
-        
-        # Capture
-        if (j > 0 and board[i+1][j-1] > 0 and board[i+1][j-1] % 2 == 1) or (i == 4 and en_passant == j-1): # Left capture
-            moves.append((i, j, i+1, j-1, -1))
-        
-        if (j < 7 and board[i+1][j+1] > 0 and board[i+1][j+1] % 2 == 1) or (i == 4 and en_passant == j+1): # Right capture
-            moves.append((i, j, i+1, j+1, -1))
+    # Moving
+    if board[i+1][j] == 0: # Looks if the square in front of the pawn is free
+        moves.append((i, j, i+1, j, -1))
+        if i == 1 and board[3][j] == 0: # Starting rank, the pawn can moves twice
+            moves.append((i, j, i+2, j, i))
+    
+    # Capture
+    if (j > 0 and board[i+1][j-1] > 0 and board[i+1][j-1] % 2 == 1) or (i == 4 and en_passant == j-1): # Left capture
+        moves.append((i, j, i+1, j-1, -1))
+    
+    if (j < 7 and board[i+1][j+1] > 0 and board[i+1][j+1] % 2 == 1) or (i == 4 and en_passant == j+1): # Right capture
+        moves.append((i, j, i+1, j+1, -1))
     
     moves_with_promotions = []
     for move in moves:
