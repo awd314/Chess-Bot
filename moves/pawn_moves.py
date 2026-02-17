@@ -1,28 +1,22 @@
 ### WHITE
 
-def get_white_pawn_moves(board, en_passant):
+def get_white_pawn_moves(pawns_list, board, en_passant):
     moves = []
 
-    count = 0
-    for i in range(8):
-        for j in range(8):
-            if board[i][j] == 1: # Looks for white pawns in the board
-                count += 1
-                # Moving
-                if board[i-1][j] == 0: # Looks if the square in front of the pawn is free
-                    moves.append((i, j, i-1, j, 0, 0))
-                    if i == 6 and board[4][j] == 0: # Starting rank, the pawn can moves twice
-                        moves.append((i, j, i-2, j, i, 0))
-                
-                # Capture
-                if (j > 0 and board[i-1][j-1] > 0 and board[i-1][j-1] % 2 == 0) or (i == 3 and en_passant == j-1): # Left capture
-                    moves.append((i, j, i-1, j-1, 0, 0))
-                
-                if (j < 7 and board[i-1][j+1] > 0 and board[i-1][j+1] % 2 == 0) or (i == 3 and en_passant == j+1): # Right capture
-                    moves.append((i, j, i-1, j+1, 0, 0))
-
-                if count == 8:
-                    break
+    for pawn_info in pawns_list:
+        i, j = pawn_info[:2]
+        # Moving
+        if board[i-1][j] == 0: # Looks if the square in front of the pawn is free
+            moves.append((i, j, i-1, j, -1, 0))
+            if i == 6 and board[4][j] == 0: # Starting rank, the pawn can moves twice
+                moves.append((i, j, i-2, j, i, 0))
+        
+        # Capture
+        if (j > 0 and board[i-1][j-1] > 0 and board[i-1][j-1] % 2 == 0) or (i == 3 and en_passant == j-1): # Left capture
+            moves.append((i, j, i-1, j-1, -1, 0))
+        
+        if (j < 7 and board[i-1][j+1] > 0 and board[i-1][j+1] % 2 == 0) or (i == 3 and en_passant == j+1): # Right capture
+            moves.append((i, j, i-1, j+1, -1, 0))
     
     moves_with_promotions = []
     for move in moves:
@@ -37,29 +31,25 @@ def get_white_pawn_moves(board, en_passant):
 
 ### BLACK
 
-def get_black_pawn_moves(board, en_passant):
+def get_black_pawn_moves(pawns_list, board, en_passant):
     moves = []
 
-    count = 0
-    for i in range(8):
-        for j in range(8):
-            if board[i][j] == 2: # Looks for black pawns in the board
-                count += 1
-                # Moving
-                if board[i+1][j] == 0: # Looks if the square in front of the pawn is free
-                    moves.append((i, j, i+1, j, 0, 0))
-                    if i == 1 and board[3][j] == 0: # Starting rank, the pawn can moves twice
-                        moves.append((i, j, i+2, j, i, 0))
-                
-                # Capture
-                if (j > 0 and board[i+1][j-1] > 0 and board[i+1][j-1] % 2 == 1) or (i == 4 and en_passant == j-1): # Left capture
-                    moves.append((i, j, i+1, j-1, 0, 0))
-                
-                if (j < 7 and board[i+1][j+1] > 0 and board[i+1][j+1] % 2 == 1) or (i == 4 and en_passant == j+1): # Right capture
-                    moves.append((i, j, i+1, j+1, 0, 0))
-
-                if count == 8:
-                    break
+    for pawn_info in pawns_list:
+        i, j = pawn_info[:2]
+        if board[i][j] == 2: # Looks for black pawns in the board
+            count += 1
+            # Moving
+            if board[i+1][j] == 0: # Looks if the square in front of the pawn is free
+                moves.append((i, j, i+1, j, -1, 0))
+                if i == 1 and board[3][j] == 0: # Starting rank, the pawn can moves twice
+                    moves.append((i, j, i+2, j, i, 0))
+            
+            # Capture
+            if (j > 0 and board[i+1][j-1] > 0 and board[i+1][j-1] % 2 == 1) or (i == 4 and en_passant == j-1): # Left capture
+                moves.append((i, j, i+1, j-1, -1, 0))
+            
+            if (j < 7 and board[i+1][j+1] > 0 and board[i+1][j+1] % 2 == 1) or (i == 4 and en_passant == j+1): # Right capture
+                moves.append((i, j, i+1, j+1, -1, 0))
     
     moves_with_promotions = []
     for move in moves:
