@@ -16,11 +16,16 @@ if __name__ == "__main__":
     brd.get_pieces_from_board()
 
     def test_func(inter):
-        if inter.timer == 0:
-            moves = brd.get_white_moves(inter.board.mini_board)
+        try:
+            if inter.board.turn == 0:
+                moves = inter.board.get_white_moves(inter.board.mini_board)
+            else:
+                moves = inter.board.get_black_moves(inter.board.mini_board)
             move = moves[randint(0, len(moves)-1)]
-            print(move)
-            inter.board.play_move(move, inter.board.mini_board)
+            inter.board.play_move(move, inter.board.mini_board, inter.board.turn)
+            inter.board.turn = 1 - inter.board.turn
+        except:
+            pass
 
     inter = Interface("test interface", brd, test_func)
 
