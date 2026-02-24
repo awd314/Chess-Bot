@@ -4,15 +4,18 @@ import moves.bishop_moves as bsp
 import moves.rook_moves as rok
 import moves.queen_moves as qun
 import moves.king_moves as kng
+from settings import *
 
 
-class GenericBoard:
-    def __init__(self, mini_board, turn, en_passant, white_pieces=[], black_pieces=[]):
+class Board:
+    def __init__(self, mini_board, turn):
         self.mini_board = mini_board # Nested arrays representing the board, is always 8x8 (hardcoded)
         self.turn = turn # 0 (white to play) or 1 (black to play)
-        self.en_passant = en_passant # A flag indicating in which row the last two-squares-move pawn move occured
-        self.white_pieces = white_pieces # Arrays of white pieces, used to lcate them instantly when calculating moves rather than looking through the whole board
-        self.black_pieces = black_pieces # Same with black pieces
+        self.en_passant = -1 # A flag indicating in which row the last two-squares-move pawn move occured
+        self.white_pieces = [] # Arrays of white pieces, used to lcate them instantly when calculating moves rather than looking through the whole board
+        self.black_pieces = [] # Same with black pieces
+        self.game_over_flag = -1 # Flag to indicate if the game is over and how
+        self.get_pieces_from_board()
 
     
     def get_pieces_from_board(self):
@@ -28,27 +31,22 @@ class GenericBoard:
                         self.white_pieces.append((i, j, self.mini_board[i][j]))
                     else: # Black piece (isn't 0)
                         self.black_pieces.append((i, j, self.mini_board[i][j]))
-
-
-class Board(GenericBoard):
-    def __init__(self, mini_board, turn, en_passant, white_pieces=[], black_pieces=[]):
-        super().__init__(mini_board, turn, en_passant, white_pieces, black_pieces)
     
 
-    def play_move(self, move, board, turn):
+    def play_move(self, move, turn):
         # Moves the given piece to its new location
-        board[move[2]][move[3]] = board[move[0]][move[1]]
-        board[move[0]][move[1]] = 0 # Removes piece from old location
+        self.mini_board[move[2]][move[3]] = self.mini_board[move[0]][move[1]]
+        self.mini_board[move[0]][move[1]] = 0 # Removes piece from old location
         if move[-1] == 12: # Castling
             if move[3] == 6: # Short castling
-                board[move[0]][5] = board[move[0]][7]
-                board[move[0]][7] = 0
+                self.mini_board[move[0]][5] = self.mini_board[move[0]][7]
+                self.mini_board[move[0]][7] = 0
             elif move[3] == 2: # Long castling
-                board[move[0]][3] = board[move[0]][0]
-                board[move[0]][0] = 0
-            board[move[0]][move[1]] = 0
+                self.mini_board[move[0]][3] = self.mini_board[move[0]][0]
+                self.mini_board[move[0]][0] = 0
+            self.mini_board[move[0]][move[1]] = 0
         elif move[-1] > 7: # Pawn promotion
-            board[move[2]][move[3]] = move[-1] - 2 - (11 - move[-1]) + turn
+            self.mini_board[move[2]][move[3]] = move[-1] - 2 - (11 - move[-1]) + turn
         else: # Updates flag for en passant
             self.en_passant = move[-1]
         self.get_pieces_from_board()
@@ -118,25 +116,31 @@ class Board(GenericBoard):
                         break
         
         return checked
+    
+
+    def get_moves(self):
+        if self.turn:
+            return self.get_black_moves()
+        return self.get_white_moves()
 
     
-    def get_white_moves(self, board):
+    def get_white_moves(self):
         moves = []
         king_pos = None
 
         for piece in self.white_pieces:
             if piece[2] == 1:
-                moves += pwn.get_white_pawn_moves(piece[:2], board, self.en_passant)
+                moves += pwn.get_white_pawn_moves(piece[:2], self.mini_board, self.en_passant)
             elif piece[2] == 3:
-                moves += knt.get_white_knight_moves(piece[:2], board)
+                moves += knt.get_white_knight_moves(piece[:2], self.mini_board)
             elif piece[2] == 5:
-                moves += bsp.get_white_bishop_moves(piece[:2], board)
+                moves += bsp.get_white_bishop_moves(piece[:2], self.mini_board)
             elif piece[2] == 7:
-                moves += rok.get_white_rook_moves(piece[:2], board)
+                moves += rok.get_white_rook_moves(piece[:2], self.mini_board)
             elif piece[2] == 9:
-                moves += qun.get_white_queen_moves(piece[:2], board)
+                moves += qun.get_white_queen_moves(piece[:2], self.mini_board)
             elif piece[2] == 11:
-                moves += kng.get_white_king_moves(piece[:2], board)
+                moves += kng.get_white_king_moves(piece[:2], self.mini_board)
                 king_pos = piece[:2]
         
         board_copy = [[self.mini_board[i][j] for j in range(8)] for i in range(8)]
@@ -147,11 +151,11 @@ class Board(GenericBoard):
                 valid = True
                 if move[3] == 6:
                     for i in range(3):
-                        if self.is_white_checked((move[0], move[1]+i), board):
+                        if self.is_white_checked((move[0], move[1]+i), self.mini_board):
                             valid = False
                 else:
                     for i in range(4):
-                        if self.is_white_checked((move[0], move[1]-i), board):
+                        if self.is_white_checked((move[0], move[1]-i), self.mini_board):
                             valid = False
                 if not valid:
                     moves.pop(index)
@@ -168,29 +172,29 @@ class Board(GenericBoard):
                     moves.pop(index)
                 else:
                     index += 1
-                board_copy[move[2]][move[3]] = board[move[2]][move[3]]
-                board_copy[move[0]][move[1]] = board[move[0]][move[1]]
+                board_copy[move[2]][move[3]] = self.mini_board[move[2]][move[3]]
+                board_copy[move[0]][move[1]] = self.mini_board[move[0]][move[1]]
 
         return moves
 
 
-    def get_black_moves(self, board):
+    def get_black_moves(self):
         moves = []
         king_pos = None
 
         for piece in self.black_pieces:
             if piece[2] == 2:
-                moves += pwn.get_black_pawn_moves(piece[:2], board, self.en_passant)
+                moves += pwn.get_black_pawn_moves(piece[:2], self.mini_board, self.en_passant)
             elif piece[2] == 4:
-                moves += knt.get_black_knight_moves(piece[:2], board)
+                moves += knt.get_black_knight_moves(piece[:2], self.mini_board)
             elif piece[2] == 6:
-                moves += bsp.get_black_bishop_moves(piece[:2], board)
+                moves += bsp.get_black_bishop_moves(piece[:2], self.mini_board)
             elif piece[2] == 8:
-                moves += rok.get_black_rook_moves(piece[:2], board)
+                moves += rok.get_black_rook_moves(piece[:2], self.mini_board)
             elif piece[2] == 10:
-                moves += qun.get_black_queen_moves(piece[:2], board)
+                moves += qun.get_black_queen_moves(piece[:2], self.mini_board)
             elif piece[2] == 12:
-                moves += kng.get_black_king_moves(piece[:2], board)
+                moves += kng.get_black_king_moves(piece[:2], self.mini_board)
                 king_pos = piece[:2]
         
         board_copy = [[self.mini_board[i][j] for j in range(8)] for i in range(8)]
@@ -222,7 +226,7 @@ class Board(GenericBoard):
                     moves.pop(index)
                 else:
                     index += 1
-                board_copy[move[2]][move[3]] = board[move[2]][move[3]]
-                board_copy[move[0]][move[1]] = board[move[0]][move[1]]
+                board_copy[move[2]][move[3]] = self.mini_board[move[2]][move[3]]
+                board_copy[move[0]][move[1]] = self.mini_board[move[0]][move[1]]
 
         return moves

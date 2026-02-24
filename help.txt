@@ -17,3 +17,6 @@ black
 moves
 (i_start, j_start, i_end, j_end, special_event_flag)
 special_event_flag -> -1 (inactive) ; [0-7] (en_passant) ; [8-11] (promotions) ; [12] (castle has been performed)
+
+end game
+Board.game_over_flag -> -1 (inactive) ; 0 (checkmate)
