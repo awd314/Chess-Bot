@@ -8,7 +8,7 @@ from settings import *
 
 
 class Board:
-    def __init__(self, mini_board, turn):
+    def __init__(self, mini_board, turn=0):
         self.mini_board = mini_board # Nested arrays representing the board, is always 8x8 (hardcoded)
         self.turn = turn # 0 (white to play) or 1 (black to play)
         self.en_passant = -1 # A flag indicating in which row the last two-squares-move pawn move occured

@@ -15,7 +15,7 @@ if __name__ == "__main__":
         [7, 3, 5, 9, 11, 5, 3, 7]
     ], 0)
     brd.get_pieces_from_board()
-    b = Bot(brd.turn, Board([[brd.mini_board[i][j] for j in range(8)] for i in range(8)], brd.turn))
+    b = Bot(1-brd.turn, Board([[brd.mini_board[i][j] for j in range(8)] for i in range(8)], brd.turn))
     b.is_thinking = True
     b.expand_decision_tree(b.tree, 0)
     last_move = None
@@ -34,10 +34,10 @@ if __name__ == "__main__":
         #     pass
         try:
             move = None
-            if inter.board.turn and last_move is None:
-                moves = inter.board.get_black_moves()
+            if not inter.board.turn and last_move is None:
+                moves = inter.board.get_white_moves()
                 move = moves[randint(0, len(moves)-1)]
-            elif inter.board.turn == 0 and not b.is_thinking:
+            elif inter.board.turn == 1 and not b.is_thinking:
                 move = b.tree.move
             if move is not None:
                 inter.board.play_move(move, inter.board.turn)

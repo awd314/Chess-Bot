@@ -5,7 +5,7 @@ sys.setrecursionlimit(RECURSION_LIMIT)
 
 
 class Bot:
-    def __init__(self, turn, board, depth=3):
+    def __init__(self, board, turn=0, depth=3):
         self.turn = turn
         self.depth = depth
         self.tree = Node(board, None, None, None)
