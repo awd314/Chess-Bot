@@ -32,22 +32,25 @@ if __name__ == "__main__":
         #     inter.board.turn = 1 - inter.board.turn
         # except:
         #     pass
-        move = None
-        if inter.board.turn and last_move is None:
-            moves = inter.board.get_black_moves()
-            move = moves[randint(0, len(moves)-1)]
-        elif inter.board.turn == 0 and not b.is_thinking:
-            move = b.tree.move
-        if move is not None:
-            inter.board.play_move(move, inter.board.turn)
-            last_move = move
-        if not b.is_thinking:
-            b.update_tree(last_move)
-            inter.board.turn = 1 - inter.board.turn
-            last_move = None
-            b.is_thinking = True
-            t = Thread(target=b.expand_decision_tree, args=(b.tree, 0,))
-            t.start()
+        try:
+            move = None
+            if inter.board.turn and last_move is None:
+                moves = inter.board.get_black_moves()
+                move = moves[randint(0, len(moves)-1)]
+            elif inter.board.turn == 0 and not b.is_thinking:
+                move = b.tree.move
+            if move is not None:
+                inter.board.play_move(move, inter.board.turn)
+                last_move = move
+            if not b.is_thinking:
+                b.update_tree(last_move)
+                inter.board.turn = 1 - inter.board.turn
+                last_move = None
+                b.is_thinking = True
+                t = Thread(target=b.expand_decision_tree, args=(b.tree, 0,))
+                t.start()
+        except:
+            pass
         
 
     inter = Interface("test interface", brd, test_func)

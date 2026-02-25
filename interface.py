@@ -38,7 +38,7 @@ class Interface:
             self.screen.fill("#000000")
             self.test_func(self)
             self.draw_board(self.board.mini_board)
-            print(self.clock.get_fps())
+            #print(self.clock.get_fps())
 
             pg.display.flip()
     

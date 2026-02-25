@@ -50,6 +50,17 @@ class Board:
         else: # Updates flag for en passant
             self.en_passant = move[-1]
         self.get_pieces_from_board()
+    
+
+    def get_king_pos(self, piece_flag):
+        if piece_flag:
+            for piece in self.white_pieces:
+                if piece[2] == 11:
+                    return piece[:2]
+        else:
+            for piece in self.black_pieces:
+                if piece[2] == 12:
+                    return piece[:2]
 
 
     def is_white_checked(self, pos, board):
