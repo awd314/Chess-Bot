@@ -1,7 +1,5 @@
 from board import *
-import sys
 from pieces_masks import *
-sys.setrecursionlimit(RECURSION_LIMIT)
 
 
 class Bot:
@@ -25,7 +23,7 @@ class Bot:
         ### Black
         black_points = 0
         for piece in node.board.black_pieces:
-            black_points -= mask_dict[piece[2]][7-piece[0]][piece[1]]
+            black_points += mask_dict[piece[2]][piece[0]][piece[1]]
             black_points += MATERIAL_EVAL_DICT[piece[2]]
 
         

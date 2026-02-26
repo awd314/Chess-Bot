@@ -15,6 +15,7 @@ class Board:
         self.white_pieces = [] # Arrays of white pieces, used to lcate them instantly when calculating moves rather than looking through the whole board
         self.black_pieces = [] # Same with black pieces
         self.game_over_flag = -1 # Flag to indicate if the game is over and how
+        self.castle = [False, False]
         self.get_pieces_from_board()
 
     
@@ -35,6 +36,12 @@ class Board:
 
     def play_move(self, move, turn):
         # Moves the given piece to its new location
+        piece_tag = self.mini_board[move[0]][move[1]]
+        if piece_tag in (7, 8, 11, 12):
+            if piece_tag % 2:
+                self.castle[0] = True
+            else:
+                self.castle[1] = True
         self.mini_board[move[2]][move[3]] = self.mini_board[move[0]][move[1]]
         self.mini_board[move[0]][move[1]] = 0 # Removes piece from old location
         if move[-1] == 12: # Castling
@@ -168,7 +175,7 @@ class Board:
                     for i in range(4):
                         if self.is_white_checked((move[0], move[1]-i), self.mini_board):
                             valid = False
-                if not valid:
+                if not valid or self.castle[0]:
                     moves.pop(index)
                 else:
                     index += 1
@@ -222,7 +229,7 @@ class Board:
                     for i in range(4): # O-O-O
                         if self.is_black_checked((move[0], move[1]-i), board_copy):
                             valid = False
-                if not valid:
+                if not valid or self.castle[1]:
                     moves.pop(index)
                 else:
                     index += 1

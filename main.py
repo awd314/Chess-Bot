@@ -1,5 +1,4 @@
 from interface import *
-from random import randint
 from bot import *
 
 
@@ -16,8 +15,8 @@ class Main:
         [7, 3, 5, 9, 11, 5, 3, 7]
     ])
         self.board.get_pieces_from_board()
-        self.bot = Bot(self.board, turn=1)
-        self.interface = Interface("test interface", self.board, self.bot)
+        self.bot = Bot(self.board, turn=randint(0, 1))
+        self.interface = Interface("Chess Bot", self.board, self.bot)
         self.bot.is_thinking = True
         self.bot.expand_decision_tree(self.bot.tree, 0)
 
