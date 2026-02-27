@@ -36,7 +36,7 @@ def get_black_king_moves(pos, board):
         if board[0][5] == 0 and board[0][6] == 0 and board[0][7] == 8:
             moves.append((pos[0], pos[1], 0, 6, 12))
         # long castle
-        if board[0][3] == 0 and board[0][2] == 0 and board[7][1] == 0 and board[7][0] == 8:
+        if board[0][3] == 0 and board[0][2] == 0 and board[0][1] == 0 and board[0][0] == 8:
             moves.append((pos[0], pos[1], 0, 2, 12))
 
     return moves

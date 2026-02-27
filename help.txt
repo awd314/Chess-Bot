@@ -19,4 +19,4 @@ moves
 special_event_flag -> -1 (inactive) ; [0-7] (en_passant) ; [8-11] (promotions) ; [12] (castle has been performed)
 
 end game
-Board.game_over_flag -> -1 (inactive) ; 0 (checkmate)
+Board.game_over_flag -> -1 (inactive) ; 0 (black checkmated) ; 1 (white checkmated) ; 2 (stalemate) ; 3 (repetition)

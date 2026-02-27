@@ -73,30 +73,39 @@ class Interface:
                     self.closed = True
                 if event.type == pg.MOUSEBUTTONDOWN:
                     self.read_user_input()
+            
+            if self.board.game_over_flag == -1:
 
-            if self.board.turn != self.bot.turn and self.last_move is None:
-                if self.check_player_move():
-                    self.board.play_move(self.player_move, self.board.turn)
-                    self.last_move = self.player_move
-                    self.player_move = ()
+                if self.board.turn != self.bot.turn and self.last_move is None:
+                    if self.check_player_move():
+                        self.board.play_move(self.player_move, self.board.turn)
+                        self.last_move = self.player_move
+                        self.player_move = ()
+                        self.board.turn = 1 - self.board.turn
+                        self.available_moves = None
+                        self.board.verify_endgame()
+                elif self.board.turn == self.bot.turn and self.last_move is None and not self.bot.is_thinking:
+                    self.board.play_move(self.bot.tree.move, self.board.turn)
+                    self.last_move = self.bot.tree.move
                     self.board.turn = 1 - self.board.turn
+                    self.promotion_selection = 0
                     self.available_moves = None
-            elif self.board.turn == self.bot.turn and self.last_move is None and not self.bot.is_thinking:
-                self.board.play_move(self.bot.tree.move, self.board.turn)
-                self.last_move = self.bot.tree.move
-                self.board.turn = 1 - self.board.turn
-                self.promotion_selection = 0
-            if not self.bot.is_thinking:
-                self.bot.update_tree(self.last_move)
-                self.last_move = None
-                self.bot.is_thinking = True
-                t = Thread(target=self.bot.expand_decision_tree, args=(self.bot.tree, 0,))
-                t.start()
+                    self.board.verify_endgame()
+                if not self.bot.is_thinking:
+                    self.bot.update_tree(self.last_move)
+                    self.last_move = None
+                    self.bot.is_thinking = True
+                    t = Thread(target=self.bot.expand_decision_tree, args=(self.bot.tree, 0,))
+                    t.start()
+                
+            else:
+                print(self.board.game_over_flag)
 
             self.screen.fill("#000000")
-            self.draw_board(self.board.mini_board)
+            self.draw_board()
+            self.draw_promotion_pieces()
             self.draw_preview_move()
-            #print(self.clock.get_fps())
+            print(self.clock.get_fps())
 
             pg.display.flip()
     
@@ -114,18 +123,23 @@ class Interface:
                     pg.draw.circle(self.screen, "#707070", (j * SQUARES_SIZE + SQUARES_SIZE // 2, HEIGHT_OFFEST + SQUARES_SIZE * i + SQUARES_SIZE // 2), SQUARES_SIZE // 10)
     
 
-    def draw_board(self, board):
+    def draw_board(self):
         for i in range(8):
             for j in range(8):
                 x, y = j, i
                 if self.bot.turn == 0:
                     x, y = 7-j, 7-i
                 color = ["#FFFFFF", "#202020"][(i+j)%2]
-                if (y, x) == self.player_move:
+                if (y, x) == self.board.last_moves[0][:2] or (y, x) == self.board.last_moves[0][2:4]:
+                    color = "#504A50"
+                elif (y, x) == self.player_move:
                     color = "#707070"
                 pg.draw.rect(self.screen, color, (j*SQUARES_SIZE, HEIGHT_OFFEST+i*SQUARES_SIZE, SQUARES_SIZE, SQUARES_SIZE))
-                if board[y][x] > 0:
-                    self.screen.blit(self.sprites[board[y][x]], (j*SQUARES_SIZE + PIECES_OFFSET, HEIGHT_OFFEST+i*SQUARES_SIZE + PIECES_OFFSET, SQUARES_SIZE + PIECES_OFFSET, SQUARES_SIZE + PIECES_OFFSET))
+                if self.board.mini_board[y][x] > 0:
+                    self.screen.blit(self.sprites[self.board.mini_board[y][x]], (j*SQUARES_SIZE + PIECES_OFFSET, HEIGHT_OFFEST+i*SQUARES_SIZE + PIECES_OFFSET, SQUARES_SIZE + PIECES_OFFSET, SQUARES_SIZE + PIECES_OFFSET))
+    
+
+    def draw_promotion_pieces(self):
         for i in range(4):
             x = 8 * SQUARES_SIZE + SIDE // 10
             y = SIDE // 2 - SQUARES_SIZE * 2

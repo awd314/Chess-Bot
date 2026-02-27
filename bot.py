@@ -27,18 +27,25 @@ class Bot:
             black_points += MATERIAL_EVAL_DICT[piece[2]]
 
         
-        if node.successors == []: # Checkmate and stalemate
-            king_pos = node.board.get_king_pos(turn) # Retreives king's position for the opposite color
-            if turn:
-                if node.board.is_black_checked(king_pos, node.board.mini_board): # black is checkmated
-                    return CHECKMATE_VALUE
-                else: # Stalemate
-                    return 0
-            else:
-                if node.board.is_white_checked(king_pos, node.board.mini_board): # white is checkmated
-                    return -CHECKMATE_VALUE
-                else: # Stalemate
-                    return 0
+        # if node.successors == []: # Checkmate and stalemate
+        #     king_pos = node.board.get_king_pos(turn) # Retreives king's position for the opposite color
+        #     if turn:
+        #         if node.board.is_black_checked(king_pos, node.board.mini_board): # black is checkmated
+        #             return CHECKMATE_VALUE
+        #         else: # Stalemate
+        #             return 0
+        #     else:
+        #         if node.board.is_white_checked(king_pos, node.board.mini_board): # white is checkmated
+        #             return -CHECKMATE_VALUE
+        #         else: # Stalemate
+        #             return 0
+        node.board.verify_repetition()
+        if node.successors == []:
+            node.board.verify_endgame()
+        if node.board.game_over_flag == node.board.turn:
+            return CHECKMATE_VALUE * [-1, 1][node.board.turn]
+        if node.board.game_over_flag > 2:
+            return 0
 
         
         return white_points - black_points

@@ -5,6 +5,7 @@ import moves.rook_moves as rok
 import moves.queen_moves as qun
 import moves.king_moves as kng
 from settings import *
+from collections import deque
 
 
 class Board:
@@ -16,6 +17,7 @@ class Board:
         self.black_pieces = [] # Same with black pieces
         self.game_over_flag = -1 # Flag to indicate if the game is over and how
         self.castle = [False, False]
+        self.last_moves = deque([(), (), (), (), (), ()])
         self.get_pieces_from_board()
 
     
@@ -32,6 +34,33 @@ class Board:
                         self.white_pieces.append((i, j, self.mini_board[i][j]))
                     else: # Black piece (isn't 0)
                         self.black_pieces.append((i, j, self.mini_board[i][j]))
+    
+
+    def verify_repetition(self):
+        repetition = True
+        index = 0
+        while repetition and index < 4:
+            if self.last_moves[index][:2] != self.last_moves[index+2][2:4] or self.last_moves[index][2:4] != self.last_moves[index+2][:2]:
+                repetition = False
+            index += 1
+        if repetition:
+            self.game_over_flag = 3
+    
+
+    def verify_endgame(self):
+        moves = self.get_moves()
+        if len(moves) == 0:
+            if self.turn == 0:
+                if self.is_black_checked(self.get_king_pos(1-self.turn), self.mini_board):
+                    self.game_over_flag = 0
+                else:
+                    self.game_over_flag = 2
+            else:
+                if self.is_white_checked(self.get_king_pos(1-self.turn), self.mini_board):
+                    self.game_over_flag = 1
+                else:
+                    self.game_over_flag = 2
+        self.verify_repetition()
     
 
     def play_move(self, move, turn):
@@ -57,6 +86,8 @@ class Board:
         else: # Updates flag for en passant
             self.en_passant = move[-1]
         self.get_pieces_from_board()
+        self.last_moves.pop()
+        self.last_moves.appendleft(move)
     
 
     def get_king_pos(self, piece_flag):
