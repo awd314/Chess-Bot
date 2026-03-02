@@ -76,7 +76,7 @@ class Interface:
             
             if self.board.game_over_flag == -1:
 
-                if self.board.turn != self.bot.turn and self.last_move is None:
+                if self.board.turn != self.bot.turn:
                     if self.check_player_move():
                         self.board.play_move(self.player_move, self.board.turn)
                         self.last_move = self.player_move
@@ -105,7 +105,7 @@ class Interface:
             self.draw_board()
             self.draw_promotion_pieces()
             self.draw_preview_move()
-            print(self.clock.get_fps())
+            #print(self.clock.get_fps())
 
             pg.display.flip()
     
